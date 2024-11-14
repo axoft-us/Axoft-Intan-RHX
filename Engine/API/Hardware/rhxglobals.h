@@ -177,8 +177,8 @@ const unsigned int FIFOCapacityInWords = 67108864;
 const int MaxNumBlocksToRead = 56;
 
 // Intan 4-bit hardware board mode identifier
-const int RHDUSBInterfaceBoardMode = 0;
-const int RHDControllerBoardMode = 13;
+const int RHDUSBInterfaceBoardMode = 13; // changed from 0, for USB Interface Board 
+const int RHDControllerBoardMode = 0; //changed from 13, for USB Interface Board 
 const int RHSControllerBoardMode = 14;
 const int CLAMPControllerBoardMode = 15;
 

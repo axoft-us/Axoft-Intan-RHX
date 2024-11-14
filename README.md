@@ -1,3 +1,29 @@
+
+Intan RHX.exe changelog:
+----------------------------------
+When using the UIB with the OK 7310:
+
+Change value for "RHDControllerBoardMode" in rhxglobals.h  from 13 to 0
+Axoft\Electrophysiology Setup\Intan Software\Intan-RHX-main_modified\Intan-RHX-main\Engine\API\Hardware\rhxglobals.h
+
+// Intan 4-bit hardware board mode identifier
+const int RHDUSBInterfaceBoardMode = 13; // changed from 0, for USB Interface Board 
+const int RHDControllerBoardMode = 0; //changed from 13, for USB Interface Board 
+const int RHSControllerBoardMode = 14;
+const int CLAMPControllerBoardMode = 15;
+
+then generate new .exe
+
+Axoft\Electrophysiology Setup\Intan Software\Intan-RHX-main_modified\Intan_RHX_Axoft_modified\release\RHX7310.exe
+
+-> copy .exe to C:\Program Files\Intan
+
+new bitfile:
+copy new bitfile to C:\Program Files\Intan
+
+bitfile location: Axoft\Electrophysiology Setup\Intan Software\Vivado\ConfigRHDController_7310.bit
+
+
 # Intan-RHX
 Intan RHX is free, powerful data acquisition software that displays and records electrophysiological signals from any Intan RHD or RHS system using an RHD USB interface board, RHD recording controller, or RHS stim/recording controller.
 

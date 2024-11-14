@@ -1,3 +1,6 @@
+CURRENT INTAN .EXE CAN BE DOWNLOADED FROM HERE
+
+
 Instructions to compire from source: https://intantech.com/files/Intan_RHX_source_code_setup.pdf
 
 Intan RHX.exe changelog:

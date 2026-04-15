@@ -1,9 +1,9 @@
 //------------------------------------------------------------------------------
 //
 //  Intan Technologies RHX Data Acquisition Software
-//  Version 3.3.2
+//  Version 3.5.0
 //
-//  Copyright (c) 2020-2024 Intan Technologies
+//  Copyright (c) 2020-2026 Intan Technologies
 //
 //  This file is part of the Intan Technologies RHX Data Acquisition Software.
 //
@@ -18,13 +18,13 @@
 //  GNU General Public License for more details.
 //
 //  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 //  This software is provided 'as-is', without any express or implied warranty.
 //  In no event will the authors be held liable for any damages arising from
 //  the use of this software.
 //
-//  See <http://www.intantech.com> for documentation and product information.
+//  See <https://www.intantech.com> for documentation and product information.
 //
 //------------------------------------------------------------------------------
 
@@ -35,8 +35,6 @@
 #include <QString>
 #include "signalsources.h"
 #include "datafilemanager.h"
-
-using namespace std;
 
 class DataFileManager;
 
@@ -69,7 +67,7 @@ struct HeaderFileChannel
     double impedanceMagnitude;
     double impedancePhase;
     int channelNumber() const { return nativeChannelName.section('-', -1).toInt(); }
-    int endingNumber(int numChars = 1) const { return nativeChannelName.right(numChars).toInt(); }
+    int endingNumber(int numChars = 1) const { return QStringView{nativeChannelName}.right(numChars).toInt(); }
 };
 
 
@@ -79,7 +77,7 @@ struct HeaderFileGroup
     QString prefix;
     bool enabled;
     int numAmplifierChannels;
-    vector<HeaderFileChannel> channels;
+    std::vector<HeaderFileChannel> channels;
     int numChannels() const { return (int) channels.size(); }
 };
 
@@ -131,7 +129,7 @@ public:
 
     QString refChannelName;
 
-    vector<HeaderFileGroup> groups;
+    std::vector<HeaderFileGroup> groups;
     int numGroups() const { return (int) groups.size(); }
     int groupIndex(const QString& prefix) const;
     int numChannels() const;

@@ -1,9 +1,9 @@
 //------------------------------------------------------------------------------
 //
 //  Intan Technologies RHX Data Acquisition Software
-//  Version 3.3.2
+//  Version 3.5.0
 //
-//  Copyright (c) 2020-2024 Intan Technologies
+//  Copyright (c) 2020-2026 Intan Technologies
 //
 //  This file is part of the Intan Technologies RHX Data Acquisition Software.
 //
@@ -18,13 +18,13 @@
 //  GNU General Public License for more details.
 //
 //  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 //  This software is provided 'as-is', without any express or implied warranty.
 //  In no event will the authors be held liable for any damages arising from
 //  the use of this software.
 //
-//  See <http://www.intantech.com> for documentation and product information.
+//  See <https://www.intantech.com> for documentation and product information.
 //
 //------------------------------------------------------------------------------
 #ifndef SIGNALSOURCES_H
@@ -40,8 +40,6 @@
 #include "stimparameters.h"
 #include "rhxglobals.h"
 #include "systemstate.h"
-
-using namespace std;
 
 class MultiColumnDisplay;
 
@@ -93,7 +91,7 @@ private:
     SystemState* state;
     QString name;
     bool enabled;
-    vector<Channel*> signalChannels;
+    std::vector<Channel*> signalChannels;
 };
 
 // Data structure containing descriptions of all signal sources acquired from the controller.
@@ -116,10 +114,10 @@ public:
     SignalGroup* groupByIndex(int index) const;
     SignalGroup* groupByName(const QString& groupName) const;
     Channel* channelByName(const QString& nativeName) const;
-    Channel* channelByName(const string& nativeName) const;
+    Channel* channelByName(const std::string& nativeName) const;
     Channel* getAmplifierChannel(int boardStream, int chipChannel) const;
     QString getNativeAndCustomNames(const QString& nativeName) const;
-    QString getNativeAndCustomNames(const string& nativeName) const;
+    QString getNativeAndCustomNames(const std::string& nativeName) const;
 
     void setSelected(const QString& nativeName, bool selected);
     void setSelectedEntireGroupID(const QString& nativeName, bool selected);
@@ -135,8 +133,8 @@ public:
     int numUSBAmpChannels() const;
     ControllerType getControllerType() const { return state->getControllerTypeEnum(); }
 
-    vector<string> amplifierChannelsNameList() const;
-    vector<string> completeChannelsNameList() const;
+    std::vector<std::string> amplifierChannelsNameList() const;
+    std::vector<std::string> completeChannelsNameList() const;
     QStringList amplifierNameListUserOrder(const QString& port) const;
     QStringList headstageSignalNameList(const QString& port) const;
     QStringList controllerIOSignalNameList() const;
@@ -174,10 +172,10 @@ public:
 private:
     SystemState* state;
 
-    vector<SignalGroup*> portGroups;   // signals from SPI ports (amplifiers, aux inputs, supply voltages)
-    vector<SignalGroup*> baseGroups;   // signals from main controller unit (digital and analog I/O)
+    std::vector<SignalGroup*> portGroups;   // signals from SPI ports (amplifiers, aux inputs, supply voltages)
+    std::vector<SignalGroup*> baseGroups;   // signals from main controller unit (digital and analog I/O)
 
-    map<string, Channel*> channelMap;   // map from native name to channel pointer, for quick access
+    std::map<std::string, Channel*> channelMap;   // map from native name to channel pointer, for quick access
 
     MultiColumnDisplay* display;  // needed for undo/redo operations with pinned waveforms and scroll bar state
 

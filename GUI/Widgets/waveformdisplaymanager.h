@@ -1,9 +1,9 @@
 //------------------------------------------------------------------------------
 //
 //  Intan Technologies RHX Data Acquisition Software
-//  Version 3.3.2
+//  Version 3.5.0
 //
-//  Copyright (c) 2020-2024 Intan Technologies
+//  Copyright (c) 2020-2026 Intan Technologies
 //
 //  This file is part of the Intan Technologies RHX Data Acquisition Software.
 //
@@ -18,13 +18,13 @@
 //  GNU General Public License for more details.
 //
 //  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 //  This software is provided 'as-is', without any express or implied warranty.
 //  In no event will the authors be held liable for any damages arising from
 //  the use of this software.
 //
-//  See <http://www.intantech.com> for documentation and product information.
+//  See <https://www.intantech.com> for documentation and product information.
 //
 //------------------------------------------------------------------------------
 
@@ -36,8 +36,6 @@
 #include "minmax.h"
 #include "waveformfifo.h"
 #include "systemstate.h"
-
-using namespace std;
 
 const float ScaleFactorY = 10.0F;
 
@@ -91,14 +89,14 @@ public:
     bool isOutOfDate;
 
     // Data stores: raw y coordinates in sequence
-    vector<MinMax<float> > yMinMaxData;
-    vector<float> yData;
-    vector<uint16_t> stimFlags;
-    vector<uint16_t> rasterData;
+    std::vector<MinMax<float> > yMinMaxData;
+    std::vector<float> yData;
+    std::vector<uint16_t> stimFlags;
+    std::vector<uint16_t> rasterData;
 
     // Data stores: screen coordinates
-    vector<QLineF> verticalLines;
-    vector<QPointF> points;
+    std::vector<QLineF> verticalLines;
+    std::vector<QPointF> points;
 };
 
 class WaveformDisplayManager
@@ -180,7 +178,7 @@ private:
     int validDataIndex;
 
     // Waveform data mapped to waveform name
-    map<string, WaveformDisplayDataStore*> data;
+    std::map<std::string, WaveformDisplayDataStore*> data;
 
     const QColor StimColor = QColor(255, 155, 155);
     const QColor ComplianceLimitColor = QColor(255, 0, 0);

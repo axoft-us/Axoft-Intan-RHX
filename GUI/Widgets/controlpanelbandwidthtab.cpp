@@ -1,9 +1,9 @@
 //------------------------------------------------------------------------------
 //
 //  Intan Technologies RHX Data Acquisition Software
-//  Version 3.3.2
+//  Version 3.5.0
 //
-//  Copyright (c) 2020-2024 Intan Technologies
+//  Copyright (c) 2020-2026 Intan Technologies
 //
 //  This file is part of the Intan Technologies RHX Data Acquisition Software.
 //
@@ -18,13 +18,13 @@
 //  GNU General Public License for more details.
 //
 //  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 //  This software is provided 'as-is', without any express or implied warranty.
 //  In no event will the authors be held liable for any damages arising from
 //  the use of this software.
 //
-//  See <http://www.intantech.com> for documentation and product information.
+//  See <https://www.intantech.com> for documentation and product information.
 //
 //------------------------------------------------------------------------------
 
@@ -33,8 +33,6 @@
 #include "rhxregisters.h"
 #include "bandwidthdialog.h"
 #include "controlpanelbandwidthtab.h"
-
-using namespace std;
 
 ControlPanelBandwidthTab::ControlPanelBandwidthTab(ControllerInterface* controllerInterface_, SystemState* state_,
                                                    QWidget *parent) :
@@ -276,7 +274,7 @@ void ControlPanelBandwidthTab::simpleBandwidthDialog()
                                           state->sampleRate->getNumericValue(), this);
     if (bandwidthDialog.exec()) {
         state->desiredLower3dBCutoff->setValueWithLimits(bandwidthDialog.lowFreqLineEdit->text().toDouble());
-        vector<double> dspCutoffFreq = RHXRegisters::getDspFreqTable(state->sampleRate->getNumericValue());
+        std::vector<double> dspCutoffFreq = RHXRegisters::getDspFreqTable(state->sampleRate->getNumericValue());
         state->desiredDspCutoffFreq->setValueWithLimits(dspCutoffFreq[15]);
         for (int i = 1; i < 16; ++i) {
             if (dspCutoffFreq[i] < state->desiredLower3dBCutoff->getValue()) {

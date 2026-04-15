@@ -1,9 +1,9 @@
 //------------------------------------------------------------------------------
 //
 //  Intan Technologies RHX Data Acquisition Software
-//  Version 3.3.2
+//  Version 3.5.0
 //
-//  Copyright (c) 2020-2024 Intan Technologies
+//  Copyright (c) 2020-2026 Intan Technologies
 //
 //  This file is part of the Intan Technologies RHX Data Acquisition Software.
 //
@@ -18,17 +18,19 @@
 //  GNU General Public License for more details.
 //
 //  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 //  This software is provided 'as-is', without any express or implied warranty.
 //  In no event will the authors be held liable for any damages arising from
 //  the use of this software.
 //
-//  See <http://www.intantech.com> for documentation and product information.
+//  See <https://www.intantech.com> for documentation and product information.
 //
 //------------------------------------------------------------------------------
 
 #include "renamechanneldialog.h"
+
+#include <QRegularExpressionValidator>
 
 RenameChannelDialog::RenameChannelDialog(const QString& nativeName, const QString& oldName, QWidget* parent) :
     QDialog(parent)
@@ -40,10 +42,11 @@ RenameChannelDialog::RenameChannelDialog(const QString& nativeName, const QStrin
     oldNameLayout->addWidget(new QLabel(tr("Old channel name: ") + oldName + addNativeName, this));
 
     nameLineEdit = new QLineEdit;
-    QRegExp regExp("[\\w-\\+\\./]{1,16}");  // Name must be 1-16 characters, alphanumeric or _-+./
-    nameLineEdit->setValidator(new QRegExpValidator(regExp, this));
+    QRegularExpression regExp("[\\w+./-]{1,16}", QRegularExpression::UseUnicodePropertiesOption); // Name must be 1-16 characters, alphanumeric or _-+./
+    auto reValidator = new QRegularExpressionValidator(regExp, this);
+    nameLineEdit->setValidator(reValidator);
 
-    connect(nameLineEdit, SIGNAL(textChanged(const QString &)),
+    connect(nameLineEdit, SIGNAL(textChanged(QString)),
             this, SLOT(onLineEditTextChanged()));
 
     QHBoxLayout* newNameLayout = new QHBoxLayout;

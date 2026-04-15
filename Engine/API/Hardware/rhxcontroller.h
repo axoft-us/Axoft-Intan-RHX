@@ -1,9 +1,9 @@
 //------------------------------------------------------------------------------
 //
 //  Intan Technologies RHX Data Acquisition Software
-//  Version 3.3.2
+//  Version 3.5.0
 //
-//  Copyright (c) 2020-2024 Intan Technologies
+//  Copyright (c) 2020-2026 Intan Technologies
 //
 //  This file is part of the Intan Technologies RHX Data Acquisition Software.
 //
@@ -18,13 +18,13 @@
 //  GNU General Public License for more details.
 //
 //  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 //  This software is provided 'as-is', without any express or implied warranty.
 //  In no event will the authors be held liable for any damages arising from
 //  the use of this software.
 //
-//  See <http://www.intantech.com> for documentation and product information.
+//  See <https://www.intantech.com> for documentation and product information.
 //
 //------------------------------------------------------------------------------
 
@@ -35,8 +35,6 @@
 #include "rhxglobals.h"
 #include "rhxdatablock.h"
 #include "okFrontPanel.h"
-
-using namespace std;
 
 const int USB3BlockSize	= 1024;
 const int RAMBurstSize = 32;
@@ -52,11 +50,11 @@ public:
     bool isPlayback() const override { return false; }
     AcquisitionMode acquisitionMode() const override { return LiveMode; }
 
-    vector<string> listAvailableDeviceSerials();
+    std::vector<std::string> listAvailableDeviceSerials();
 
-    int open(const string& boardSerialNumber) override;
+    int open(const std::string& boardSerialNumber) override;
     int open();
-    bool uploadFPGABitfile(const string& filename) override;
+    bool uploadFPGABitfile(const std::string& filename) override;
     void resetBoard() override;
 
     void run() override;
@@ -65,10 +63,10 @@ public:
     void resetFpga() override;
 
     bool readDataBlock(RHXDataBlock *dataBlock) override;
-    bool readDataBlocks(int numBlocks, deque<RHXDataBlock*> &dataQueue) override;
+    bool readDataBlocks(int numBlocks, std::deque<RHXDataBlock*> &dataQueue) override;
     long readDataBlocksRaw(int numBlocks, uint8_t* buffer) override;
 
-    int queueToFile(deque<RHXDataBlock*> &dataQueue, ofstream &saveOut);
+    int queueToFile(std::deque<RHXDataBlock*> &dataQueue, std::ofstream &saveOut);
 
     void setContinuousRunMode(bool continuousMode) override;
     void setMaxTimeStep(unsigned int maxTimeStep) override;
@@ -118,17 +116,17 @@ public:
     void clearTtlOut() override;                 // not used with ControllerStimRecord
     void resetSequencers() override;
     void programStimReg(int stream, int channel, StimRegister reg, int value) override;
-    void uploadCommandList(const vector<unsigned int> &commandList, AuxCmdSlot auxCommandSlot, int bank = 0) override;
+    void uploadCommandList(const std::vector<unsigned int> &commandList, AuxCmdSlot auxCommandSlot, int bank = 0) override;
 
-    int findConnectedChips(vector<ChipType> &chipType, vector<int> &portIndex, vector<int> &commandStream,
-                           vector<int> &numChannelsOnPort, bool = false, bool returnToFastSettle = false,
+    int findConnectedChips(std::vector<ChipType> &chipType, std::vector<int> &portIndex, std::vector<int> &commandStream,
+                           std::vector<int> &numChannelsOnPort, bool /*synthMaxChannels = false*/, bool returnToFastSettle = false,
                            bool usePreviousDelay = false, int selectedPort = 0, int lastDetectedChip = -1,
                            int lastDetectedNumStreams = -1) override;
 
     // Physical board only
     static void resetBoard(okCFrontPanel* dev_);
     static int getBoardMode(okCFrontPanel* dev_);
-    static int getNumSPIPorts(okCFrontPanel *dev_, bool isUSB3, bool& expanderBoardDetected, bool isRHS7310 = false);
+    static int getNumSPIPorts(okCFrontPanel *dev_, bool isUSB3, bool& expanderBoardDetected);
 
 private:
     // Objects of this class should not be copied.  Disable copy and assignment operators.

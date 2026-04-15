@@ -1,9 +1,9 @@
 //------------------------------------------------------------------------------
 //
 //  Intan Technologies RHX Data Acquisition Software
-//  Version 3.3.2
+//  Version 3.5.0
 //
-//  Copyright (c) 2020-2024 Intan Technologies
+//  Copyright (c) 2020-2026 Intan Technologies
 //
 //  This file is part of the Intan Technologies RHX Data Acquisition Software.
 //
@@ -18,13 +18,13 @@
 //  GNU General Public License for more details.
 //
 //  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 //  This software is provided 'as-is', without any express or implied warranty.
 //  In no event will the authors be held liable for any damages arising from
 //  the use of this software.
 //
-//  See <http://www.intantech.com> for documentation and product information.
+//  See <https://www.intantech.com> for documentation and product information.
 //
 //------------------------------------------------------------------------------
 
@@ -54,6 +54,7 @@
 #include "spikesortingdialog.h"
 
 class AbstractPanel;
+class QSoundEffect;
 
 class ControllerInterface : public QObject
 {
@@ -66,7 +67,7 @@ public:
     void rescanPorts(bool updateDisplay = false);
 
     void updateChipCommandLists(bool updateStimParams = false);
-    void getCableDelay(vector<int> &delays) const { rhxController->getCableDelay(delays); }
+    void getCableDelay(std::vector<int> &delays) const { rhxController->getCableDelay(delays); }
     void setCableDelay(BoardPort port, int delay) { rhxController->setCableDelay(port, delay); }
     void enableExternalDigOut(BoardPort port, bool enable) { rhxController->enableExternalDigOut(port, enable); }
     void setExternalDigOutChannel(BoardPort port, int channel) { rhxController->setExternalDigOutChannel(port, channel); }
@@ -77,7 +78,7 @@ public:
 
     void runController();
     void runControllerSilently(double nSeconds, QProgressDialog* progress = nullptr);
-    float measureRmsLevel(string waveName, double timeSec) const;
+    float measureRmsLevel(std::string waveName, double timeSec) const;
     void setAllSpikeDetectionThresholds();
     void sweepDisplay(double speed);
     bool rewindPossible() const { return waveformFifo->numWordsInMemory(WaveformFifo::ReaderDisplay) > 0; }
@@ -152,6 +153,7 @@ signals:
     void setHardwareFifoStatus(double percentFull);
     void cpuLoadPercent(double percent);
     void TCPErrorMessage(QString errorMessage);
+    void TCPWarningMessage(QString warningMessage);
 
 public slots:
     void updateFromState();
@@ -159,6 +161,8 @@ public slots:
     void manualStimTriggerOn(QString keyName);
     void manualStimTriggerOff(QString keyName);
     void manualStimTriggerPulse(QString keyName);
+    void playSoundTriggerStart();
+    void playSoundTriggerEnd();
 
 private slots:
     void updateHardwareFifo(double percentFull) { emit setHardwareFifoStatus(percentFull); }
@@ -167,15 +171,19 @@ private slots:
 private:
     void openController(const QString& boardSerialNumber);
     void initializeController();
-    int scanPorts(vector<ChipType> &chipType, vector<int> &portIndex, vector<int> &commandStream,
-                  vector<int> &numChannelsOnPort);
-    void addAmplifierChannels(const vector<ChipType> &chipType, const vector<int> &portIndex,
-                              const vector<int> &commandStream, const vector<int> &numChannelsOnPort);
+    int scanPorts(std::vector<ChipType> &chipType, std::vector<int> &portIndex, std::vector<int> &commandStream,
+                  std::vector<int> &numChannelsOnPort);
+    void addAmplifierChannels(const std::vector<ChipType> &chipType, const std::vector<int> &portIndex,
+                              const std::vector<int> &commandStream, const std::vector<int> &numChannelsOnPort);
     void enablePlaybackChannels();
     void addPlaybackHeadstageChannels();
 
     void sendTCPError(QString errorMessage);
+    void sendTCPWarning(QString warningMessage);
     void pipeReadErrorMessage(int errorID);
+
+    QSoundEffect* triggerStartBeep;
+    QSoundEffect* triggerEndBeep;
 
     SystemState* state;
     AbstractRHXController* rhxController;
@@ -208,7 +216,7 @@ private:
 
     double hardwareFifoPercentFull;
     double waveformProcessorCpuLoad;
-    vector<double> cpuLoadHistory;
+    std::vector<double> cpuLoadHistory;
 
     bool is7310;
 

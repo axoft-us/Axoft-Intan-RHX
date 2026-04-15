@@ -1,9 +1,9 @@
 //------------------------------------------------------------------------------
 //
 //  Intan Technologies RHX Data Acquisition Software
-//  Version 3.3.2
+//  Version 3.5.0
 //
-//  Copyright (c) 2020-2024 Intan Technologies
+//  Copyright (c) 2020-2026 Intan Technologies
 //
 //  This file is part of the Intan Technologies RHX Data Acquisition Software.
 //
@@ -18,13 +18,13 @@
 //  GNU General Public License for more details.
 //
 //  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 //  This software is provided 'as-is', without any express or implied warranty.
 //  In no event will the authors be held liable for any damages arising from
 //  the use of this software.
 //
-//  See <http://www.intantech.com> for documentation and product information.
+//  See <https://www.intantech.com> for documentation and product information.
 //
 //------------------------------------------------------------------------------
 
@@ -68,7 +68,11 @@ void Filter::filter(float* inout, unsigned int length)
 
 BiquadFilter::BiquadFilter()
 {
-    reset();
+    firstTime = true;
+    prevIn = 0.0F;
+    prevPrevIn = 0.0F;
+    prevOut = 0.0F;
+    prevPrevOut = 0.0F;
 }
 
 BiquadFilter::~BiquadFilter()
@@ -167,6 +171,11 @@ SecondOrderLowpassFilter::SecondOrderLowpassFilter(double fc, double q, double s
     b2 = b0;
     a1 = (float)(2.0 * (k * k - 1.0) * norm);
     a2 = (float)((1.0 - k / q + k * k) * norm);
+
+    // prevIn = 0.0F;
+    // prevPrevIn = 0.0F;
+    // prevOut = 0.0F;
+    // prevPrevOut = 0.0F;
 }
 
 
@@ -180,6 +189,11 @@ SecondOrderHighpassFilter::SecondOrderHighpassFilter(double fc, double q, double
     b2 = b0;
     a1 = (float)(2.0 * (k * k - 1.0) * norm);
     a2 = (float)((1.0 - k / q + k * k) * norm);
+
+    // prevIn = 0.0F;
+    // prevPrevIn = 0.0F;
+    // prevOut = 0.0F;
+    // prevPrevOut = 0.0F;
 }
 
 
@@ -193,6 +207,11 @@ SecondOrderNotchFilter::SecondOrderNotchFilter(double fNotch, double bandwidth, 
     b2 = b0;
     a1 = b1;
     a2 = (float)(d * d);
+
+    // prevIn = 0.0F;
+    // prevPrevIn = 0.0F;
+    // prevOut = 0.0F;
+    // prevPrevOut = 0.0F;
 }
 
 
@@ -217,7 +236,7 @@ void HighOrderFilter::reset()
 }
 
 
-vector<BiquadFilter> HighOrderFilter::getFilters() const
+std::vector<BiquadFilter> HighOrderFilter::getFilters() const
 {
     return filters;
 }
@@ -287,7 +306,7 @@ BesselLowpassFilter::BesselLowpassFilter(unsigned int order, double fc, double s
         };
         break;
     default:
-        cerr << "BesselLowpassFilter: order is not valid." << '\n';
+        std::cerr << "BesselLowpassFilter: order is not valid." << '\n';
     }
 }
 
@@ -348,7 +367,7 @@ BesselHighpassFilter::BesselHighpassFilter(unsigned int order, double fc, double
         };
         break;
     default:
-        cerr << "BesselHighpassFilter: order is not valid." << '\n';
+        std::cerr << "BesselHighpassFilter: order is not valid." << '\n';
     }
 }
 
@@ -409,7 +428,7 @@ ButterworthLowpassFilter::ButterworthLowpassFilter(unsigned int order, double fc
         };
         break;
     default:
-        cerr << "ButterworthLowpassFilter: order is not valid." << '\n';
+        std::cerr << "ButterworthLowpassFilter: order is not valid." << '\n';
     }
 }
 
@@ -470,6 +489,6 @@ ButterworthHighpassFilter::ButterworthHighpassFilter(unsigned int order, double 
         };
         break;
     default:
-        cerr << "ButterworthHighpassFilter: order is not valid." << '\n';
+        std::cerr << "ButterworthHighpassFilter: order is not valid." << '\n';
     }
 }

@@ -1,9 +1,9 @@
 //------------------------------------------------------------------------------
 //
 //  Intan Technologies RHX Data Acquisition Software
-//  Version 3.3.2
+//  Version 3.5.0
 //
-//  Copyright (c) 2020-2024 Intan Technologies
+//  Copyright (c) 2020-2026 Intan Technologies
 //
 //  This file is part of the Intan Technologies RHX Data Acquisition Software.
 //
@@ -18,13 +18,13 @@
 //  GNU General Public License for more details.
 //
 //  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 //  This software is provided 'as-is', without any express or implied warranty.
 //  In no event will the authors be held liable for any damages arising from
 //  the use of this software.
 //
-//  See <http://www.intantech.com> for documentation and product information.
+//  See <https://www.intantech.com> for documentation and product information.
 //
 //------------------------------------------------------------------------------
 
@@ -74,7 +74,7 @@ MultiWaveformPlot::MultiWaveformPlot(int columnIndex_, WaveformDisplayManager* w
 
     int fontSize = 8;
     if (state->highDPIScaleFactor > 1) fontSize = 12;
-    labelFont = new QFont("Courier", fontSize);
+    labelFont = new QFont("Courier New", fontSize);
     labelFontMetrics = new QFontMetrics(*labelFont);
     labelHeight = labelFontMetrics->ascent() + 1;
 
@@ -128,7 +128,6 @@ MultiWaveformPlot::MultiWaveformPlot(int columnIndex_, WaveformDisplayManager* w
 MultiWaveformPlot::~MultiWaveformPlot()
 {
     disconnect(state, nullptr, this, nullptr);
-    disconnect(this, nullptr, nullptr, nullptr);
     delete listManager;
     delete scrollBar;
     delete labelFontMetrics;
@@ -1051,9 +1050,9 @@ void MultiWaveformPlot::mouseReleaseEvent(QMouseEvent* event)
             // Click and release to select a single waveform.
             WaveIndex clickedWaveform = findSelectedWaveform(dropPoint.y());
 
-            vector<bool> before = listManager->selectionRecord();
+            std::vector<bool> before = listManager->selectionRecord();
             listManager->selectSingleWaveform(clickedWaveform);
-            vector<bool> after = listManager->selectionRecord();
+            std::vector<bool> after = listManager->selectionRecord();
             needToUpdateState = !listManager->selectionRecordsAreEqual(before, after);
         }
     } else if (regionUnpinSymbols.contains(dropPoint)) {
@@ -1403,7 +1402,7 @@ void MultiWaveformPlot::drawWaveformLabel(QPainter &painter, const QString& name
 
     int halfHeight = (labelHeight - 1) / 2;
     int y1 = position.y() - halfHeight;
-    int y2 = position.y() + halfHeight - 1;
+    int y2 = position.y() + halfHeight;
 
     int x = position.x() + 3;
     int x1 = x - labelWidth1 + 2;
@@ -1433,20 +1432,20 @@ void MultiWaveformPlot::drawWaveformLabel(QPainter &painter, const QString& name
                 (state->saveDCAmplifierWaveforms->getValue() && filterText == "DC") ||
                 (!isAmpSignal)) {
                 painter.fillRect(x1, y1, 13, labelHeight, color);
-                painter.drawImage(x1 + 2, y1 + 2, darkText ? saveSelectedBadge : saveBadge);
+                painter.drawImage(x1 + 2, y1, darkText ? saveSelectedBadge : saveBadge);
                 xOffset += 11;
             }
         }
 
         if (channel->getOutputToTcp()) {
             painter.fillRect(x1 + xOffset, y1, 15, labelHeight, color);
-            painter.drawImage(x1 + xOffset + 2, y1 + 2, darkText ? tcpSelectedBadge : tcpBadge);
+            painter.drawImage(x1 + xOffset + 2, y1, darkText ? tcpSelectedBadge : tcpBadge);
             xOffset += 13;
         }
 
         if (channel->isStimEnabled()) {
             painter.fillRect(x1 + xOffset, y1, 10, labelHeight, color);
-            painter.drawImage(x1 + xOffset + 1, y1 + 2, darkText ? stimSelectedBadge : stimBadge);
+            painter.drawImage(x1 + xOffset + 1, y1, darkText ? stimSelectedBadge : stimBadge);
         }
     }
 }
@@ -1490,7 +1489,7 @@ void MultiWaveformPlot::drawYScaleBar(QPainter &painter, QPoint cursor, int yPos
     case UnknownWaveform:
     case WaveformDivider:
         // None of these enum values should be reached.
-        cerr << "Error: Unexpected WaveformType switch case reached.";
+        std::cerr << "Error: Unexpected WaveformType switch case reached.";
         return;
     }
 

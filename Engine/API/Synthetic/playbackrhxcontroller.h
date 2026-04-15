@@ -1,9 +1,9 @@
 //------------------------------------------------------------------------------
 //
 //  Intan Technologies RHX Data Acquisition Software
-//  Version 3.3.2
+//  Version 3.5.0
 //
-//  Copyright (c) 2020-2024 Intan Technologies
+//  Copyright (c) 2020-2026 Intan Technologies
 //
 //  This file is part of the Intan Technologies RHX Data Acquisition Software.
 //
@@ -18,13 +18,13 @@
 //  GNU General Public License for more details.
 //
 //  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 //  This software is provided 'as-is', without any express or implied warranty.
 //  In no event will the authors be held liable for any damages arising from
 //  the use of this software.
 //
-//  See <http://www.intantech.com> for documentation and product information.
+//  See <https://www.intantech.com> for documentation and product information.
 //
 //------------------------------------------------------------------------------
 
@@ -43,8 +43,8 @@ public:
     bool isSynthetic() const override { return false; }
     bool isPlayback() const override { return true; }
     AcquisitionMode acquisitionMode() const override { return PlaybackMode; }
-    int open(const string& /* boardSerialNumber */) override { return 1; }  // Always return 1 to emulate a successful opening.
-    bool uploadFPGABitfile(const string& /* filename */) override { return true; }
+    int open(const std::string& /* boardSerialNumber */) override { return 1; }  // Always return 1 to emulate a successful opening.
+    bool uploadFPGABitfile(const std::string& /* filename */) override { return true; }
     void resetBoard() override {}
 
     void run() override {}
@@ -53,7 +53,7 @@ public:
     void resetFpga() override {}
 
     bool readDataBlock(RHXDataBlock *dataBlock) override;
-    bool readDataBlocks(int numBlocks, deque<RHXDataBlock*> &dataQueue) override;
+    bool readDataBlocks(int numBlocks, std::deque<RHXDataBlock*> &dataQueue) override;
     long readDataBlocksRaw(int numBlocks, uint8_t *buffer) override;
 
     void setContinuousRunMode(bool) override {}
@@ -104,10 +104,10 @@ public:
     void clearTtlOut() override {}
     void resetSequencers() override {}
     void programStimReg(int, int, StimRegister, int) override {}
-    void uploadCommandList(const vector<unsigned int>&, AuxCmdSlot, int) override {}
+    void uploadCommandList(const std::vector<unsigned int>&, AuxCmdSlot, int) override {}
 
-    int findConnectedChips(vector<ChipType> &chipType, vector<int> &portIndex, vector<int> &commandStream,
-                           vector<int> &numChannelsOnPort, bool synthMaxChannels = false, bool returnToFastSettle = false,
+    int findConnectedChips(std::vector<ChipType> &chipType, std::vector<int> &portIndex, std::vector<int> &commandStream,
+                           std::vector<int> &numChannelsOnPort, bool synthMaxChannels = false, bool returnToFastSettle = false,
                            bool usePreviousDelay = false, int selectedPort = 0, int lastDetectedChip = -1, int lastDetectedNumStreams = -1) override;
 
 private:

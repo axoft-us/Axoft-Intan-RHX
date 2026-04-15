@@ -1,9 +1,9 @@
 //------------------------------------------------------------------------------
 //
 //  Intan Technologies RHX Data Acquisition Software
-//  Version 3.3.2
+//  Version 3.5.0
 //
-//  Copyright (c) 2020-2024 Intan Technologies
+//  Copyright (c) 2020-2026 Intan Technologies
 //
 //  This file is part of the Intan Technologies RHX Data Acquisition Software.
 //
@@ -18,13 +18,13 @@
 //  GNU General Public License for more details.
 //
 //  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 //  This software is provided 'as-is', without any express or implied warranty.
 //  In no event will the authors be held liable for any damages arising from
 //  the use of this software.
 //
-//  See <http://www.intantech.com> for documentation and product information.
+//  See <https://www.intantech.com> for documentation and product information.
 //
 //------------------------------------------------------------------------------
 
@@ -305,7 +305,7 @@ void SignalList::addChannel(const Channel *channel)
 
 int SignalList::getAmplifierIndexFromStreamChannel(int stream, int channel) const
 {
-    map<int, int>::const_iterator p = amplifierIndices.find(RHXDataBlock::maxChannelsPerStream() * stream + channel);
+    std::map<int, int>::const_iterator p = amplifierIndices.find(RHXDataBlock::maxChannelsPerStream() * stream + channel);
     if (p == amplifierIndices.end()) {
         return -1;
     }
@@ -314,28 +314,28 @@ int SignalList::getAmplifierIndexFromStreamChannel(int stream, int channel) cons
 
 void SignalList::print()
 {
-    cout << "SignalList:" << '\n';
+    std::cout << "SignalList:" << '\n';
 
-    cout << amplifier.size() << " amplifier signals:" << '\n';
-    for (int i = 0; i < (int) amplifier.size(); ++i) cout << amplifier[i] << '\n';
+    std::cout << amplifier.size() << " amplifier signals:" << '\n';
+    for (int i = 0; i < (int) amplifier.size(); ++i) std::cout << amplifier[i] << '\n';
 
-    cout << auxInput.size() << " aux input signals:" << '\n';
-    for (int i = 0; i < (int) auxInput.size(); ++i) cout << auxInput[i] << '\n';
+    std::cout << auxInput.size() << " aux input signals:" << '\n';
+    for (int i = 0; i < (int) auxInput.size(); ++i) std::cout << auxInput[i] << '\n';
 
-    cout << supplyVoltage.size() << " supply voltage signals:" << '\n';
-    for (int i = 0; i < (int) supplyVoltage.size(); ++i) cout << supplyVoltage[i] << '\n';
+    std::cout << supplyVoltage.size() << " supply voltage signals:" << '\n';
+    for (int i = 0; i < (int) supplyVoltage.size(); ++i) std::cout << supplyVoltage[i] << '\n';
 
-    cout << boardAdc.size() << " analog in signals:" << '\n';
-    for (int i = 0; i < (int) boardAdc.size(); ++i) cout << boardAdc[i] << '\n';
+    std::cout << boardAdc.size() << " analog in signals:" << '\n';
+    for (int i = 0; i < (int) boardAdc.size(); ++i) std::cout << boardAdc[i] << '\n';
 
-    cout << boardDac.size() << " analog out signals:" << '\n';
-    for (int i = 0; i < (int) boardDac.size(); ++i) cout << boardDac[i] << '\n';
+    std::cout << boardDac.size() << " analog out signals:" << '\n';
+    for (int i = 0; i < (int) boardDac.size(); ++i) std::cout << boardDac[i] << '\n';
 
-    cout << boardDigitalIn.size() << " digital in signals:" << '\n';
-    for (int i = 0; i < (int) boardDigitalIn.size(); ++i) cout << boardDigitalIn[i] << '\n';
+    std::cout << boardDigitalIn.size() << " digital in signals:" << '\n';
+    for (int i = 0; i < (int) boardDigitalIn.size(); ++i) std::cout << boardDigitalIn[i] << '\n';
 
-    cout << boardDigitalOut.size() << " digital out signals:" << '\n';
-    for (int i = 0; i < (int) boardDigitalOut.size(); ++i) cout << boardDigitalOut[i] << '\n';
+    std::cout << boardDigitalOut.size() << " digital out signals:" << '\n';
+    for (int i = 0; i < (int) boardDigitalOut.size(); ++i) std::cout << boardDigitalOut[i] << '\n';
 
-    cout << '\n';
+    std::cout << '\n';
 }

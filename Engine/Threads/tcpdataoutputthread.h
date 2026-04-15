@@ -1,9 +1,9 @@
 //------------------------------------------------------------------------------
 //
 //  Intan Technologies RHX Data Acquisition Software
-//  Version 3.3.2
+//  Version 3.5.0
 //
-//  Copyright (c) 2020-2024 Intan Technologies
+//  Copyright (c) 2020-2026 Intan Technologies
 //
 //  This file is part of the Intan Technologies RHX Data Acquisition Software.
 //
@@ -18,13 +18,13 @@
 //  GNU General Public License for more details.
 //
 //  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 //  This software is provided 'as-is', without any express or implied warranty.
 //  In no event will the authors be held liable for any damages arising from
 //  the use of this software.
 //
-//  See <http://www.intantech.com> for documentation and product information.
+//  See <https://www.intantech.com> for documentation and product information.
 //
 //------------------------------------------------------------------------------
 
@@ -37,8 +37,6 @@
 #include "systemstate.h"
 #include "waveformfifo.h"
 #include "tcpcommunicator.h"
-
-using namespace std;
 
 class TCPDataOutputThread : public QThread
 {
@@ -66,7 +64,7 @@ private:
     TCPCommunicator *tcpWaveformDataCommunicator;
     TCPCommunicator *tcpSpikeDataCommunicator;
 
-    vector<string> channelNames;
+    std::vector<std::string> channelNames;
     QVector<QString> enabledChannelNames;
     QVector<QString> enabledStimChannelNames;
 
@@ -102,8 +100,8 @@ private:
 
     double sampleRate;
 
-    vector<uint8_t> posStimAmplitudes;
-    vector<uint8_t> negStimAmplitudes;
+    std::vector<uint8_t> posStimAmplitudes;
+    std::vector<uint8_t> negStimAmplitudes;
 
     bool closeRequested;
     bool closeCompleted;

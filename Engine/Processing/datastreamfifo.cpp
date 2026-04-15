@@ -1,9 +1,9 @@
 //------------------------------------------------------------------------------
 //
 //  Intan Technologies RHX Data Acquisition Software
-//  Version 3.3.2
+//  Version 3.5.0
 //
-//  Copyright (c) 2020-2024 Intan Technologies
+//  Copyright (c) 2020-2026 Intan Technologies
 //
 //  This file is part of the Intan Technologies RHX Data Acquisition Software.
 //
@@ -18,13 +18,13 @@
 //  GNU General Public License for more details.
 //
 //  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 //  This software is provided 'as-is', without any express or implied warranty.
 //  In no event will the authors be held liable for any damages arising from
 //  the use of this software.
 //
-//  See <http://www.intantech.com> for documentation and product information.
+//  See <https://www.intantech.com> for documentation and product information.
 //
 //------------------------------------------------------------------------------
 
@@ -32,8 +32,6 @@
 #include <cstring>
 #include "rhxglobals.h"
 #include "datastreamfifo.h"
-
-using namespace std;
 
 // Create a circular buffer for USB data.  If data will be read using a pointer returned from
 // pointerToData(), then a maxReadLength must be defined to allocate extra space beyond the 'end'
@@ -45,7 +43,7 @@ DataStreamFifo::DataStreamFifo(int bufferSize_, int maxReadLength_) :
 {
     int bufferSizeWithExtra = bufferSize + maxReadLength;
     memoryNeededGB = sizeof(uint16_t) * bufferSizeWithExtra / (1024.0 * 1024.0 * 1024.0);
-    cout << "DataStreamFifo: Allocating " << 2 * bufferSizeWithExtra / 1.0e6 << " MBytes for FIFO buffer." << '\n';
+    std::cout << "DataStreamFifo: Allocating " << 2 * bufferSizeWithExtra / 1.0e6 << " MBytes for FIFO buffer." << std::endl;
     buffer = nullptr;
 
     memoryAllocated = true;
@@ -53,11 +51,11 @@ DataStreamFifo::DataStreamFifo(int bufferSize_, int maxReadLength_) :
         buffer = new uint16_t [bufferSizeWithExtra];
     } catch (std::bad_alloc&) {
         memoryAllocated = false;
-        cerr << "Error: DataStreamFifo constructor could not allocate " << memoryNeededGB << " GB of memory." << '\n';
+        std::cerr << "Error: DataStreamFifo constructor could not allocate " << memoryNeededGB << " GB of memory." << std::endl;
     }
 
     if (!buffer) {
-        cerr << "Error: DataStreamFifo constructor could not allocate " << 2 * bufferSizeWithExtra << " bytes of memory." << '\n';
+        std::cerr << "Error: DataStreamFifo constructor could not allocate " << 2 * bufferSizeWithExtra << " bytes of memory." << std::endl;
     }
     resetBuffer();
 }
@@ -87,8 +85,8 @@ bool DataStreamFifo::writeToBuffer(const uint8_t* dataSource, int numWords)
         usedWords.release(numWords);
         return true;
     } else {
-        cerr << "DataStreamFifo: Buffer overrun on request of " << numWords << " words." << '\n';
-        cerr << "   ...only " << freeWords.available() << " words are available." << '\n';
+        std::cerr << "DataStreamFifo: Buffer overrun on request of " << numWords << " words." << '\n';
+        std::cerr << "   ...only " << freeWords.available() << " words are available." << '\n';
         return false;  // Buffer overrun error
     }
 }
@@ -141,7 +139,7 @@ uint16_t* DataStreamFifo::pointerToData(int numWordsBeToRead_)
 {
     numWordsToBeRead = numWordsBeToRead_;
     if (numWordsToBeRead > maxReadLength) {
-        cerr << "DataStreamFifo::pointerToData: numWordsToBeRead exceeds maxReadLength." << '\n';
+        std::cerr << "DataStreamFifo::pointerToData: numWordsToBeRead exceeds maxReadLength." << '\n';
         return nullptr;
     }
     if (!usedWords.tryAcquire(numWordsToBeRead)) {

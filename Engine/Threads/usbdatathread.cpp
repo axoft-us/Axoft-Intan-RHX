@@ -1,9 +1,9 @@
 //------------------------------------------------------------------------------
 //
 //  Intan Technologies RHX Data Acquisition Software
-//  Version 3.3.2
+//  Version 3.5.0
 //
-//  Copyright (c) 2020-2024 Intan Technologies
+//  Copyright (c) 2020-2026 Intan Technologies
 //
 //  This file is part of the Intan Technologies RHX Data Acquisition Software.
 //
@@ -18,13 +18,13 @@
 //  GNU General Public License for more details.
 //
 //  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 //  This software is provided 'as-is', without any express or implied warranty.
 //  In no event will the authors be held liable for any damages arising from
 //  the use of this software.
 //
-//  See <http://www.intantech.com> for documentation and product information.
+//  See <https://www.intantech.com> for documentation and product information.
 //
 //------------------------------------------------------------------------------
 
@@ -46,7 +46,7 @@ USBDataThread::USBDataThread(AbstractRHXController* controller_, DataStreamFifo*
     bufferSize = (BufferSizeInBlocks + 1) * BytesPerWord *
             RHXDataBlock::dataBlockSizeInWords(controller->getType(), controller->maxNumDataStreams());
     memoryNeededGB = sizeof(uint8_t) * bufferSize / (1024.0 * 1024.0 * 1024.0);
-    cout << "USBDataThread: Allocating " << bufferSize / 1.0e6 << " MBytes for USB buffer." << '\n';
+    std::cout << "USBDataThread: Allocating " << bufferSize / 1.0e6 << " MBytes for USB buffer." << std::endl;
     usbBuffer = nullptr;
 
     memoryAllocated = true;
@@ -54,7 +54,7 @@ USBDataThread::USBDataThread(AbstractRHXController* controller_, DataStreamFifo*
         usbBuffer = new uint8_t [bufferSize];
     } catch (std::bad_alloc&) {
         memoryAllocated = false;
-        cerr << "Error: USBDataThread constructor could not allocate " << memoryNeededGB << " GB of memory." << '\n';
+        std::cerr << "Error: USBDataThread constructor could not allocate " << memoryNeededGB << " GB of memory." << std::endl;
     }
 
 //    cout << "Ideal thread count: " << QThread::idealThreadCount() << EndOfLine;
@@ -89,6 +89,7 @@ void USBDataThread::run()
 
             controller->setStimCmdMode(true);
             controller->setContinuousRunMode(true);
+            controller->setMaxTimeStep(0);
             controller->run();
             fifoReportTimer.start();
 //            loopTimer.start();
@@ -110,7 +111,7 @@ void USBDataThread::run()
                     if (!errorChecking) {
                         // If not checking for USB data glitches, just write all the data to the FIFO buffer.
                         if (!usbFifo->writeToBuffer(&usbBuffer[usbBufferIndex], (numBytesRead + usbBufferIndex) / BytesPerWord)) {
-                            cerr << "USBDataThread: USB FIFO overrun (1)." << '\n';
+                            std::cerr << "USBDataThread: USB FIFO overrun (1)." << '\n';
                         }
                         usbBufferIndex = 0;
                     } else {
@@ -122,7 +123,7 @@ void USBDataThread::run()
                                 // If we find two correct headers, assume the data in between is a good data block,
                                 // and write it to the FIFO buffer.
                                 if (!usbFifo->writeToBuffer(&usbBuffer[usbBufferIndex], numBytesPerDataFrame / BytesPerWord)) {
-                                    cerr << "USBDataThread: USB FIFO overrun (2)." << '\n';
+                                    std::cerr << "USBDataThread: USB FIFO overrun (2)." << '\n';
                                 }
                                 usbBufferIndex += numBytesPerDataFrame;
                             } else {
@@ -142,7 +143,7 @@ void USBDataThread::run()
                             usbBufferIndex = bytesInBuffer;
                         }
                         if (usbBufferIndex + numBytesRead >= bufferSize) {
-                            cerr << "USBDataThread: USB buffer overrun (3)." << '\n';
+                            std::cerr << "USBDataThread: USB buffer overrun (3)." << '\n';
                         }
                     }
 
@@ -222,7 +223,7 @@ bool USBDataThread::isActive() const
 void USBDataThread::setNumUsbBlocksToRead(int numUsbBlocksToRead_)
 {
     if (numUsbBlocksToRead_ > BufferSizeInBlocks) {
-        cerr << "USBDataThread::setNumUsbBlocksToRead: Buffer is too small to read " << numUsbBlocksToRead_ <<
+        std::cerr << "USBDataThread::setNumUsbBlocksToRead: Buffer is too small to read " << numUsbBlocksToRead_ <<
                 " blocks.  Increase BUFFER_SIZE_IN_BLOCKS." << '\n';
     }
     numUsbBlocksToRead = numUsbBlocksToRead_;

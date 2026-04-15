@@ -16,11 +16,12 @@ AdvancedStartupDialog::AdvancedStartupDialog(bool &useOpenCL_, uint8_t &playback
     playbackFCheckBox(nullptr),
     playbackGCheckBox(nullptr),
     playbackHCheckBox(nullptr),
-    playbackPorts(&playbackPorts_),
-    demoMode(demoMode_),
     buttonBox(nullptr),
     useOpenCL(&useOpenCL_),
-    tempUseOpenCL(useOpenCL_)
+    tempUseOpenCL(useOpenCL_),
+    tempTest(false),
+    playbackPorts(&playbackPorts_),
+    demoMode(demoMode_)
 {
     useOpenCLDescription = new QLabel(tr(
         "OpenCL is a platform-independent framework that allows the CPU to\n"
@@ -84,8 +85,10 @@ AdvancedStartupDialog::AdvancedStartupDialog(bool &useOpenCL_, uint8_t &playback
     synthMaxChannelsCheckBox->setChecked(settings.value("synthMaxChannels", false).toBool());
     connect(synthMaxChannelsCheckBox, SIGNAL(clicked(bool)), this, SLOT(changeSynthMaxChannels(bool)));
 
-    QString testModeString = settings.value("chipTestMode", "").toString();
-    testModeCheckBox->setChecked(testModeString == "Intan Chip Test Mode");
+    if (settings.value("chipTestMode", "").toString() == "Intan Chip Test Mode") {
+        tempTest = true;
+        testModeCheckBox->setChecked(true);
+    }
     connect(testModeCheckBox, SIGNAL(clicked(bool)), this, SLOT(changeTestMode(bool)));
 
     buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
@@ -151,6 +154,9 @@ AdvancedStartupDialog::AdvancedStartupDialog(bool &useOpenCL_, uint8_t &playback
 
     setLayout(scrollLayout);
 
+    // Set initial size to slightly larger than main widget's sizeHint - should avoid scroll bars for default size.
+    resize(mainWidget->sizeHint() + QSize(40, 30));
+
     setWindowTitle(tr("Advanced Startup Settings"));
     updateUIForTestMode();
 }
@@ -213,6 +219,7 @@ void AdvancedStartupDialog::accept()
     settings.setValue("synthMaxChannels", tempSynthMaxChannels);
     QString testModeString = tempTest ? "Intan Chip Test Mode" : "";
     settings.setValue("chipTestMode", testModeString);
+    settings.setValue("rhxUseOpenCL", tempUseOpenCL);
 
     *useOpenCL = tempUseOpenCL;
 
